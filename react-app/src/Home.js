@@ -1,0 +1,157 @@
+import React, { Component } from "react";
+import "./App.css";
+import { Switch, Route, NavLink, withRouter } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Navbar } from "reactstrap";
+import About from "./About";
+import Register from "./Register";
+import SignIn from "./SignIn";
+import SiyumForm from "./SiyumForm";
+import MySiyumem from "./MySiyumem";
+import MyMasechtos from "./MyMasechtos";
+import Siyum from "./Siyum";
+import SiyumById from "./SiyumById";
+import logo from "./mishna.JPG";
+class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSignedIn: localStorage.getItem("isSignedIn") || false,
+      user: JSON.parse(localStorage.getItem("user")) || ""
+    };
+  }
+  signIn = user => {
+    this.setState({ isSignedIn: true, user: user, logo });
+    localStorage.setItem("isSignedIn", true);
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+  signOut = () => {
+    this.setState({ isSignedIn: false, user: "" });
+    localStorage.clear();
+    this.props.history.push("/");
+  };
+  // SiyumById = siyumId => {
+  //   this.setState({ siyumId: siyumId });
+  // }; SiyumById={this.SiyumById}
+
+  render() {
+    return (
+      <div>
+        <Navbar>
+          <NavLink to="/" style={{ textDecoration: "none", color: "black" }}>
+            Home
+          </NavLink>
+          {!this.state.isSignedIn && (
+            <NavLink
+              to="/register"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              Register{" "}
+            </NavLink>
+          )}
+          {!this.state.isSignedIn && (
+            <NavLink
+              to="/signIn"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              Login{" "}
+            </NavLink>
+          )}
+          {this.state.isSignedIn && (
+            <NavLink
+              to="/siyumForm"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              Create A Siyum
+            </NavLink>
+          )}
+          {this.state.isSignedIn && (
+            <NavLink
+              to="/mySiyumem"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              My Siyumem{" "}
+            </NavLink>
+          )}
+          {this.state.isSignedIn && (
+            <NavLink
+              to="/myMasechtos"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              My Masechtos
+            </NavLink>
+          )}
+          {this.state.isSignedIn && (
+            <NavLink
+              to="/"
+              style={{ textDecoration: "none", color: "black" }}
+              onClick={this.signOut}
+            >
+              Logout
+            </NavLink>
+          )}
+          {this.state.isSignedIn && (
+            <SiyumById
+              isSignedIn={this.state.isSignedIn}
+              userinfo={this.state.user}
+            />
+          )}
+        </Navbar>
+        {this.state.isSignedIn && <p>Hi {this.state.user.user_name}</p>}
+        <hr />
+
+        <Switch>
+          <Route
+            path="/signIn"
+            render={props => (
+              <SignIn
+                {...props}
+                isSignedIn={this.state.isSignedIn}
+                signIn={this.signIn}
+              />
+            )}
+          />
+          <Route
+            path="/register"
+            render={props => (
+              <Register {...props} isSignedIn={this.state.isSignedIn} />
+            )}
+          />
+          <Route
+            path="/siyumForm"
+            render={props => (
+              <SiyumForm
+                {...props}
+                isSignedIn={this.state.isSignedIn}
+                userinfo={this.state.user}
+              />
+            )}
+          />
+          <Route
+            path="/mySiyumem"
+            render={props => (
+              <MySiyumem
+                {...props}
+                isSignedIn={this.state.isSignedIn}
+                userinfo={this.state.user}
+              />
+            )}
+          />
+          <Route
+            path="/myMasechtos"
+            render={props => (
+              <MyMasechtos
+                {...props}
+                isSignedIn={this.state.isSignedIn}
+                userinfo={this.state.user}
+              />
+            )}
+          />
+          <Route path="/siyum" component={Siyum} />
+          <Route path="/" component={About} />
+        </Switch>
+      </div>
+    );
+  }
+}
+export default withRouter(Home);
