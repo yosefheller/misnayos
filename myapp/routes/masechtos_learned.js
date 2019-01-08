@@ -60,21 +60,21 @@ router.put("/:Id", (req, res) => {
       }
     });
 });
-// router.delete("/:Id", (req, res) => {
-//   masechtosModel.helpers
-//     .deleteMasechtoById(req.params.Id)
-//     .then(status => {
-//       if (!status) {
-//         throw new Error("siyum not found");
-//       }
-//       console.log(status);
-//       res.status(200).json({ status: "200", message: "successfully deleted" });
-//     })
-//     .catch(error => {
-//       if (error) {
-//         res.status(404).json({ status: "404", error: error.message });
-//       }
-//     });
-// });
+router.delete("/:Id", (req, res) => {
+  masechtosModel.helpers
+    .deleteMasechtoById(req.params.Id)
+    .then(status => {
+      if (!status) {
+        throw new Error("siyum not found");
+      }
+      console.log(status);
+      res.status(200).json({ status: "200", message: "successfully deleted" });
+    })
+    .catch(error => {
+      if (error) {
+        res.status(404).json({ status: "404", error: error.message });
+      }
+    });
+});
 
 module.exports = router;

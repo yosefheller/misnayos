@@ -98,11 +98,11 @@ const createLearnMasechto = body =>
 //     where: { id: id }
 //   });
 // };
-// const deleteMasechtoById = id => {
-//   return def.destroy({
-//     where: { id: id }
-//   });
-// };
+const deleteMasechtoById = id => {
+  return def.destroy({
+    where: { id: id }
+  });
+};
 const setBoolCompletedMasechto = id => {
   return def.update(
     {
@@ -113,7 +113,7 @@ const setBoolCompletedMasechto = id => {
 };
 const getMasechtosByUserID2 = id => {
   return sequelize.query(
-    "SELECT masechtos_learned.learner_id,masechtos_learned.id,siyumem.id AS siyumId, masechtos_learned.completed,  completed,siyumem.siyum_name,siyumem.neshama,siyumem.siyum_date,masechtos_mishnayos.masechto_name FROM masechtos_learned INNER JOIN siyumem  ON masechtos_learned.siyum_id = siyumem.id INNER JOIN masechtos_mishnayos ON masechtos_learned.masechto_id = masechtos_mishnayos.id WHERE masechtos_learned.learner_id = :learner_id",
+    "SELECT masechtos_learned.learner_id,masechtos_learned.id,siyumem.id AS siyumId, masechtos_learned.completed,  completed,siyumem.siyum_name,siyumem.neshama,siyumem.siyum_date,masechtos_mishnayos.masechto_name FROM masechtos_learned INNER JOIN siyumem  ON masechtos_learned.siyum_id = siyumem.id INNER JOIN masechtos_mishnayos ON masechtos_learned.masechto_id = masechtos_mishnayos.id WHERE masechtos_learned.learner_id = :learner_id AND masechtos_learned.deleted_at IS NULL",
     { replacements: { learner_id: id }, type: sequelize.QueryTypes.SELECT },
     { raw: false }
   );
@@ -125,6 +125,6 @@ module.exports.helpers = {
   getMasechtosByUserID2,
   createLearnMasechto,
   // updateMasechtoId,
-  // deleteMasechtoById,
+  deleteMasechtoById,
   setBoolCompletedMasechto
 };

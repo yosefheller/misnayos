@@ -8,6 +8,7 @@ export default class MyMasechtos extends Component {
       loading: true
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleChange2 = this.handleChange2.bind(this);
   }
 
   fetchMyMasechtos() {
@@ -44,6 +45,13 @@ export default class MyMasechtos extends Component {
             value={MyMasechto.id}
             onChange={this.handleChange}
           />
+          to Delete click here{" "}
+          <input
+            name={MyMasechto.masechto_name}
+            type="checkbox"
+            value={MyMasechto.id}
+            onChange={this.handleChange2}
+          />
         </div>
       );
   }
@@ -61,6 +69,16 @@ export default class MyMasechtos extends Component {
     }
   }
 
+  handleChange2(event) {
+    if (event.target.checked) {
+      // console.log(event.target.value);
+      fetch("http://localhost:3030/masechtos_learned/" + event.target.value, {
+        method: "DELETE"
+      }).then(() => {
+        this.fetchMyMasechtos();
+      });
+    }
+  }
   renderLoading() {
     return <div>Please wait... Loading</div>;
   }
