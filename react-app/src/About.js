@@ -4,6 +4,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "./mishna.JPG";
 
 class About extends Component {
+  componentDidMount() {
+    this.props.prevHistory(this.props.history.location.pathname);
+  }
   render() {
     return (
       <div>

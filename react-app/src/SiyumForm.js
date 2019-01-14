@@ -37,7 +37,13 @@ class SiyumForm extends Component {
         if (json.errors) {
           this.setState({ error: json.errors });
         } else {
-          window.alert("Your Siyum Id is " + json.id);
+          window.alert(
+            "Your Siyum Id is " +
+              json.id +
+              " " +
+              "and your url is http://localhost:3000/siyum/" +
+              json.id
+          );
           this.props.history.push("/");
         }
       });
@@ -88,6 +94,17 @@ class SiyumForm extends Component {
               id="siyum_name"
               name="siyum_name"
               type="text"
+              onChange={this.handleChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="siyum_name">
+              Enter a optional 4 number siyum password
+            </Label>
+            <Input
+              id="password"
+              name="password"
+              type="number"
               onChange={this.handleChange}
             />
           </FormGroup>

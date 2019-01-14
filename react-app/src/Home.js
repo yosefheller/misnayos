@@ -10,6 +10,7 @@ import SiyumForm from "./SiyumForm";
 import MySiyumem from "./MySiyumem";
 import MyMasechtos from "./MyMasechtos";
 import Siyum from "./Siyum";
+import NoMatch from "./NoMatch";
 import SiyumById from "./SiyumById";
 import logo from "./mishna.JPG";
 class Home extends Component {
@@ -17,7 +18,8 @@ class Home extends Component {
     super(props);
     this.state = {
       isSignedIn: localStorage.getItem("isSignedIn") || false,
-      user: JSON.parse(localStorage.getItem("user")) || ""
+      user: JSON.parse(localStorage.getItem("user")) || "",
+      history: this.props.history.location.pathname
     };
   }
   signIn = user => {
@@ -29,6 +31,9 @@ class Home extends Component {
     this.setState({ isSignedIn: false, user: "" });
     localStorage.clear();
     this.props.history.push("/");
+  };
+  prevHistory = history => {
+    this.setState({ history: history });
   };
   // SiyumById = siyumId => {
   //   this.setState({ siyumId: siyumId });
@@ -108,13 +113,19 @@ class Home extends Component {
                 {...props}
                 isSignedIn={this.state.isSignedIn}
                 signIn={this.signIn}
+                prevHistory={this.state.history}
               />
             )}
           />
           <Route
             path="/register"
             render={props => (
-              <Register {...props} isSignedIn={this.state.isSignedIn} />
+              <Register
+                {...props}
+                isSignedIn={this.state.isSignedIn}
+                signIn={this.signIn}
+                prevHistory={this.state.history}
+              />
             )}
           />
           <Route
@@ -147,8 +158,27 @@ class Home extends Component {
               />
             )}
           />
-          <Route path="/siyum" component={Siyum} />
-          <Route path="/" component={About} />
+
+          <Route
+            path="/siyum/:id"
+            render={props => (
+              <Siyum
+                {...props}
+                isSignedIn={this.state.isSignedIn}
+                signIn={this.signIn}
+                userinfo={this.state.user.id}
+                prevHistory={this.prevHistory}
+              />
+            )}
+          />
+          <Route
+            path="/"
+            render={props => (
+              <About {...props} prevHistory={this.prevHistory} />
+            )}
+          />
+
+          <Route component={NoMatch} />
         </Switch>
       </div>
     );

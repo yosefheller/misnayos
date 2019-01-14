@@ -9,7 +9,7 @@ export default class MySiyumem extends Component {
     fetch("http://localhost:3030/siyumem/" + this.props.userinfo.id)
       .then(response => response.json())
       .then(mySiyumem => {
-        // console.log(mySiyumem);
+        console.log(mySiyumem);
         return this.setState(
           { mySiyumem, loading: false }
           // () => ({ mySiyumem, loading: false })
@@ -53,11 +53,11 @@ export default class MySiyumem extends Component {
         <ListGroupItem key={mySiyum.id}>
           <Link
             to={{
-              pathname: "/siyum",
+              pathname: "/siyum/" + mySiyum.id,
               state: {
                 isSignedIn: this.props.isSignedIn,
                 userinfo: this.props.userinfo.id,
-                siyumId: mySiyum.id
+                mySiyum: true
               }
             }}
           >
@@ -84,6 +84,12 @@ export default class MySiyumem extends Component {
     }
     if (this.state.loading) {
       return this.renderLoading();
+    } else if (this.state.mySiyumem.length === 0) {
+      return (
+        <div>
+          <h3>You have no siyumem</h3>
+        </div>
+      );
     } else if (this.state.mySiyumem) {
       return this.rendermySiyumem();
     } else {

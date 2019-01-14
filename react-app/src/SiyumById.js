@@ -14,7 +14,7 @@ class SiyumById extends Component {
   }
   link() {
     if (this.state.siyumId) {
-      return "/siyum";
+      return "/siyum/" + this.state.siyumId;
     }
     return "/";
   }
@@ -35,8 +35,7 @@ class SiyumById extends Component {
             pathname: this.link(),
             state: {
               isSignedIn: this.props.isSignedIn,
-              userinfo: this.props.userinfo.id,
-              siyumId: this.state.siyumId
+              userinfo: this.props.userinfo.id
             }
           }}
         >

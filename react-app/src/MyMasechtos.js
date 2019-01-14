@@ -15,13 +15,7 @@ export default class MyMasechtos extends Component {
     fetch("http://localhost:3030/masechtos_learned/" + this.props.userinfo.id)
       .then(response => response.json())
       .then(MyMasechtos => {
-        return this.setState(
-          { MyMasechtos, loading: false }
-          // () => ({ MyMasechtos, loading: false }),
-          // () => {
-          //   // console.log(this.state);
-          // }
-        );
+        return this.setState({ MyMasechtos, loading: false });
       })
       .catch(error => {
         console.log(
@@ -104,11 +98,11 @@ export default class MyMasechtos extends Component {
           I will learn bln masechto{" "}
           <Link
             to={{
-              pathname: "/siyum",
+              pathname: "/siyum/" + MyMasechto.siyumId,
               state: {
                 isSignedIn: this.props.isSignedIn,
                 userinfo: this.props.userinfo.id,
-                siyumId: MyMasechto.siyumId
+                mySiyum: true
               }
             }}
           >
@@ -145,6 +139,12 @@ export default class MyMasechtos extends Component {
     }
     if (this.state.loading) {
       return this.renderLoading();
+    } else if (this.state.MyMasechtos.length === 0) {
+      return (
+        <div>
+          <h3>You have no masechtos</h3>
+        </div>
+      );
     } else if (this.state.MyMasechtos) {
       return this.renderMyMasechtos();
     } else {

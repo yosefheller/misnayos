@@ -55,6 +55,10 @@ const def = sequelize.define(
     deleted_at: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    password: {
+      type: DataTypes.INTEGER(4),
+      allowNull: true
     }
   },
 

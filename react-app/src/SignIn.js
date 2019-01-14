@@ -29,7 +29,7 @@ class SignIn extends Component {
       if (response.status === 200) {
         response.json().then(response => {
           this.props.signIn(response);
-          this.props.history.push("/");
+          this.props.history.push(this.props.prevHistory);
         });
       } else if (response.status === 401) {
         this.setState({ status: response.statusText });

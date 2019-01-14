@@ -26,11 +26,11 @@ export default class Register extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        // console.log(json);
         if (json.errors) {
           this.setState({ error: json.errors });
         } else {
-          this.props.history.push("/signIn");
+          this.props.signIn(json);
+          this.props.history.push(this.props.prevHistory);
         }
       });
   }

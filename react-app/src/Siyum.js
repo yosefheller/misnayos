@@ -1,31 +1,47 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
 import { Form, FormGroup, Label, Input, Container } from "reactstrap";
-
+import AboutASiyum from "./AboutASiyum";
+import SiyumPassword from "./SiyumPassword";
 export default class Siyum extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       loading: true,
       masechto_id: [],
       SiyumInfo: [],
-      siyum: {}
+      siyum: { siyumByID: { password: "" } },
+      err: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
-    if (this.props.location.state) {
+    this.props.prevHistory(this.props.history.location.pathname);
+    var isSignedIn = this.props.isSignedIn || this.props.location.state;
+    if (isSignedIn) {
       this.fetchSiyumInfo();
     }
   }
   componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.location.state.siyumId !== prevProps.location.state.siyumId
-    ) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
       this.fetchSiyumInfo();
     }
   }
+  siyumPassword = password => {
+    this.setState(() => ({ siyumPassword: password }));
+    localStorage.setItem(this.props.match.params.id, password);
+    console.log(localStorage.getItem(this.props.match.params.id));
+
+    if (
+      // eslint-disable-next-line eqeqeq
+      localStorage.getItem(this.props.match.params.id) !=
+      this.state.siyum.siyumByID.password
+    ) {
+      this.setState(() => ({ err: "wrong password" }));
+    }
+    // this.props.history.push(this.props.history.location.pathname);
+  };
   handleChange(event) {
     if (event.target.checked) {
       var newMasechto = this.state.masechto_id.concat(event.target.value);
@@ -42,12 +58,13 @@ export default class Siyum extends Component {
   }
 
   handleSubmit(event) {
+    var learner_id = this.props.userinfo || this.props.location.state.userinfo;
     event.preventDefault();
     const body = this.state.masechto_id.map(masechto_id => {
       return {
-        learner_id: this.props.location.state.userinfo,
+        learner_id: learner_id,
         masechto_id: masechto_id,
-        siyum_id: this.props.location.state.siyumId
+        siyum_id: this.props.match.params.id
       };
     });
     fetch("http://localhost:3030/masechtos_learned/newmasechto", {
@@ -64,26 +81,21 @@ export default class Siyum extends Component {
 
   fetchSiyumInfo() {
     fetch(
-      "http://localhost:3030/masechtos_mishnayos/" +
-        this.props.location.state.siyumId
+      "http://localhost:3030/masechtos_mishnayos/" + this.props.match.params.id
     )
       .then(response => response.json())
       .then(SiyumInfo => {
-        // console.log(SiyumInfo);
         // console.log(this.props.location.state);
         this.setState(() => ({ SiyumInfo: SiyumInfo }));
-        fetch(
-          "http://localhost:3030/siyum/" + this.props.location.state.siyumId
-        )
+        fetch("http://localhost:3030/siyum/" + this.props.match.params.id)
           .then(response => response.json())
           .then(Siyum => {
             if (Siyum.error) {
               this.setState({ loading: false });
               throw new Error("an error accured");
             }
-            // console.log(Siyum);
+
             this.setState(() => ({ siyum: Siyum, loading: false }));
-            console.log(this.state.siyum);
             // console.log(this.props.location.state);
           })
           .catch(error => {
@@ -161,49 +173,60 @@ export default class Siyum extends Component {
     });
 
     return (
-      <Container
-        style={{
-          width: "80%",
-          margin: "auto"
-        }}
-      >
-        <p>
-          Learning is in memory of {this.state.siyum.siyumByID.neshama} and to
-          be done by {this.dateFormater(this.state.siyum.siyumByID.siyum_date)}{" "}
-          and the Siyum Id is {this.state.siyum.siyumByID.id}
-        </p>
-        <Form
-          inline
-          onSubmit={this.handleSubmit}
+      <div>
+        <Container
           style={{
-            display: "flex",
-            flexDirection: "column",
-            maxHeight: "600px",
-            flexWrap: "wrap",
-            alignItems: "center"
+            width: "80%",
+            margin: "auto"
           }}
         >
-          {SiyumInfo}
+          <p>
+            Learning is in memory of {this.state.siyum.siyumByID.neshama} and to
+            be done by{" "}
+            {this.dateFormater(this.state.siyum.siyumByID.siyum_date)} and the
+            Siyum Id is {this.state.siyum.siyumByID.id}
+          </p>
+          <Form
+            inline
+            onSubmit={this.handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              maxHeight: "600px",
+              flexWrap: "wrap",
+              alignItems: "center"
+            }}
+          >
+            {SiyumInfo}
 
-          <button>add masechtos</button>
-        </Form>
-      </Container>
+            <button>add masechtos</button>
+          </Form>
+        </Container>
+      </div>
     );
   }
 
   render() {
-    console.log("siyum. .. .. ", this.state.siyum);
-    if (!this.props.location.state) {
-      return (
-        <Redirect
-          to={{
-            pathname: "/signIn"
-          }}
-        />
-      );
+    if (!localStorage.getItem("isSignedIn")) {
+      return <AboutASiyum />;
     }
+
     if (this.state.loading) {
       return this.renderLoading();
+    } else if (
+      !this.props.location.state.mySiyum &&
+      this.state.siyum.siyumByID.password != null &&
+      // eslint-disable-next-line eqeqeq
+      localStorage.getItem(this.props.match.params.id) !=
+        this.state.siyum.siyumByID.password &&
+      this.state.SiyumInfo.length > 1
+    ) {
+      return (
+        <div>
+          {this.state.err && <p>{this.state.err}</p>}
+          <SiyumPassword password={this.siyumPassword} />;
+        </div>
+      );
     } else if (this.state.SiyumInfo.length > 1) {
       return this.renderMySiyumInfo();
     } else {
