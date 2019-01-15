@@ -35,7 +35,8 @@ class SiyumById extends Component {
             pathname: this.link(),
             state: {
               isSignedIn: this.props.isSignedIn,
-              userinfo: this.props.userinfo.id
+              userinfo: this.props.userinfo.id,
+              mySiyum: "SiyumById"
             }
           }}
         >

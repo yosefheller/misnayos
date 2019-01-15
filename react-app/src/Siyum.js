@@ -31,8 +31,6 @@ export default class Siyum extends Component {
   siyumPassword = password => {
     this.setState(() => ({ siyumPassword: password }));
     localStorage.setItem(this.props.match.params.id, password);
-    console.log(localStorage.getItem(this.props.match.params.id));
-
     if (
       // eslint-disable-next-line eqeqeq
       localStorage.getItem(this.props.match.params.id) !=
@@ -40,7 +38,6 @@ export default class Siyum extends Component {
     ) {
       this.setState(() => ({ err: "wrong password" }));
     }
-    // this.props.history.push(this.props.history.location.pathname);
   };
   handleChange(event) {
     if (event.target.checked) {
@@ -78,14 +75,20 @@ export default class Siyum extends Component {
       this.fetchSiyumInfo();
     });
   }
-
+  SetPasswordForMySiyumemAndMasechtos(Siyum) {
+    if (this.props.location.state) {
+      localStorage.setItem(
+        this.props.location.state.mySiyum,
+        Siyum.siyumByID.password
+      );
+    }
+  }
   fetchSiyumInfo() {
     fetch(
       "http://localhost:3030/masechtos_mishnayos/" + this.props.match.params.id
     )
       .then(response => response.json())
       .then(SiyumInfo => {
-        // console.log(this.props.location.state);
         this.setState(() => ({ SiyumInfo: SiyumInfo }));
         fetch("http://localhost:3030/siyum/" + this.props.match.params.id)
           .then(response => response.json())
@@ -94,9 +97,8 @@ export default class Siyum extends Component {
               this.setState({ loading: false });
               throw new Error("an error accured");
             }
-
+            this.SetPasswordForMySiyumemAndMasechtos(Siyum);
             this.setState(() => ({ siyum: Siyum, loading: false }));
-            // console.log(this.props.location.state);
           })
           .catch(error => {
             console.log(
@@ -214,7 +216,6 @@ export default class Siyum extends Component {
     if (this.state.loading) {
       return this.renderLoading();
     } else if (
-      !this.props.location.state.mySiyum &&
       this.state.siyum.siyumByID.password != null &&
       // eslint-disable-next-line eqeqeq
       localStorage.getItem(this.props.match.params.id) !=

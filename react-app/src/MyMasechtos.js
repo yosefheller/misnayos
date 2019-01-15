@@ -102,7 +102,7 @@ export default class MyMasechtos extends Component {
               state: {
                 isSignedIn: this.props.isSignedIn,
                 userinfo: this.props.userinfo.id,
-                mySiyum: true
+                mySiyum: MyMasechto.siyumId
               }
             }}
           >

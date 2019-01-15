@@ -168,16 +168,17 @@ class Home extends Component {
                 signIn={this.signIn}
                 userinfo={this.state.user.id}
                 prevHistory={this.prevHistory}
+                mySiyum="Home"
               />
             )}
           />
           <Route
+            exact
             path="/"
             render={props => (
               <About {...props} prevHistory={this.prevHistory} />
             )}
           />
-
           <Route component={NoMatch} />
         </Switch>
       </div>

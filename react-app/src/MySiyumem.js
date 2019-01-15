@@ -9,7 +9,6 @@ export default class MySiyumem extends Component {
     fetch("http://localhost:3030/siyumem/" + this.props.userinfo.id)
       .then(response => response.json())
       .then(mySiyumem => {
-        console.log(mySiyumem);
         return this.setState(
           { mySiyumem, loading: false }
           // () => ({ mySiyumem, loading: false })
@@ -29,7 +28,6 @@ export default class MySiyumem extends Component {
 
   componentDidMount() {
     this.fetchMySiyumem();
-    // console.log(this.props.isSignedIn);
   }
 
   renderLoading() {
@@ -49,22 +47,26 @@ export default class MySiyumem extends Component {
   rendermySiyumem() {
     const mySiyumem = this.state.mySiyumem.map(mySiyum => {
       // console.log(mySiyum);
+      // if (mySiyum.password) {
+      // localStorage.setItem(mySiyum.id, mySiyum.password);
+      // }
+
       return (
         <ListGroupItem key={mySiyum.id}>
+          {mySiyum.siyum_name} , the url is
           <Link
             to={{
               pathname: "/siyum/" + mySiyum.id,
               state: {
                 isSignedIn: this.props.isSignedIn,
                 userinfo: this.props.userinfo.id,
-                mySiyum: true
+                mySiyum: mySiyum.id
               }
             }}
           >
-            {mySiyum.siyum_name}
+            {"  "} http://localhost:3000/siyum/{mySiyum.id}
           </Link>
           {"  "}
-          {mySiyum.id}
         </ListGroupItem>
       );
     });
