@@ -93,6 +93,7 @@ const createLearnMasechto = body =>
   def.bulkCreate(body).then(res => {
     return res;
   });
+
 // const updateMasechtoId = (siyum, id) => {
 //   return def.update(siyum, {
 //     where: { id: id }

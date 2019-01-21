@@ -10,7 +10,7 @@ class SiyumById extends Component {
     this.setState({
       [event.target.id]: event.target.value
     });
-    console.log(this.state.siyumId);
+    // console.log(this.state.siyumId);
   }
   link() {
     if (this.state.siyumId) {

@@ -164,5 +164,17 @@ router.delete("/:Id", (req, res) => {
       }
     });
 });
-
+router.post("/sendemails", (req, res) => {
+  usersModel.helpers
+    .sendEmails(req.body)
+    .then(response => {
+      // console.log(response);
+      res.send(response);
+    })
+    .catch(error => {
+      if (error) {
+        res.status(400).json({ status: "404", error: error.message });
+      }
+    });
+});
 module.exports = router;

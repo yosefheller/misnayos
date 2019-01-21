@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { Form, FormGroup, Label, Input, Container } from "reactstrap";
+import { Form, FormGroup, Label, Container } from "reactstrap";
+
 import AboutASiyum from "./AboutASiyum";
-import SiyumPassword from "./SiyumPassword";
-export default class Siyum extends Component {
+import AboutMySiyumem from "./AboutMySiyumem";
+export default class AdminSiyum extends Component {
   constructor(props) {
     super(props);
 
@@ -13,77 +14,54 @@ export default class Siyum extends Component {
       siyum: { siyumByID: { password: "" } },
       err: ""
     };
-    this.handleChange = this.handleChange.bind(this);
+
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
-    this.props.prevHistory(this.props.history.location.pathname);
-    var isSignedIn = this.props.isSignedIn || this.props.location.state;
-    if (isSignedIn) {
+    if (this.props.location.state) {
       this.fetchSiyumInfo();
     }
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.match.params.id !== prevProps.match.params.id) {
-      this.fetchSiyumInfo();
-    }
-  }
-  siyumPassword = password => {
-    this.setState(() => ({ siyumPassword: password }));
-    localStorage.setItem(this.props.match.params.id, password);
-    if (
-      // eslint-disable-next-line eqeqeq
-      localStorage.getItem(this.props.match.params.id) !=
-      this.state.siyum.siyumByID.password
-    ) {
-      this.setState(() => ({ err: "wrong password" }));
-    }
-  };
-  handleChange(event) {
-    if (event.target.checked) {
-      var newMasechto = this.state.masechto_id.concat(event.target.value);
-      this.setState({
-        masechto_id: newMasechto
-      });
-    } else {
-      this.setState({
-        masechto_id: this.state.masechto_id.filter(function(masechto_id) {
-          return masechto_id !== event.target.value;
-        })
-      });
-    }
-  }
+  //   componentDidUpdate(prevProps, prevState) {
+  //     if (this.props.match.params.id !== prevProps.match.params.id) {
+  //       this.fetchSiyumInfo();
+  //     }
+  //   }
 
   handleSubmit(event) {
-    var learner_id = this.props.userinfo || this.props.location.state.userinfo;
     event.preventDefault();
-    // console.log(JSON.parse(localStorage.getItem("user")));
-    const body = this.state.masechto_id.map(masechto_id => {
-      return {
-        learner_id: learner_id,
-        masechto_id: masechto_id,
-        siyum_id: this.props.match.params.id
-      };
+
+    const learnersId = this.state.SiyumInfo.filter(
+      // eslint-disable-next-line array-callback-return
+      SiyumInfo => {
+        if (!SiyumInfo.completed) {
+          return SiyumInfo.LearnerId;
+        }
+      }
+    ).map(SiyumInfo => {
+      //   console.log(SiyumInfo.LearnerId);
+      return SiyumInfo.LearnerId;
     });
-    fetch("http://localhost:3030/masechtos_learned/newmasechto", {
+    const body = {
+      learnersId: learnersId,
+      siyum: this.state.siyum.siyumByID,
+      url: " http://localhost:3000/siyum/" + this.props.match.params.id
+    };
+
+    fetch("http://localhost:3030/users/sendemails", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body)
-    }).then(() => {
-      this.fetchSiyumInfo();
-    });
+    })
+      .then(response => response.json())
+      .then(res => {
+        // console.log(res);
+      });
   }
-  SetPasswordForMySiyumemAndMasechtos(Siyum) {
-    if (this.props.location.state) {
-      localStorage.setItem(
-        this.props.location.state.mySiyum,
-        Siyum.siyumByID.password
-      );
-    }
-  }
+
   fetchSiyumInfo() {
     fetch(
       "http://localhost:3030/masechtos_mishnayos/" + this.props.match.params.id
@@ -100,7 +78,6 @@ export default class Siyum extends Component {
               throw new Error("an error accured");
             }
             // console.log(Siyum);
-            this.SetPasswordForMySiyumemAndMasechtos(Siyum);
             this.setState(() => ({ siyum: Siyum, loading: false }));
           })
           .catch(error => {
@@ -115,28 +92,19 @@ export default class Siyum extends Component {
       });
   }
 
-  learnerNameOrCheckboxOrDone(
-    LearnerName,
-    masechtoName,
-    masechtoId,
-    completed
-  ) {
+  learnerNameOrCheckboxOrDone(LearnerName, completed) {
     if (completed === 1) {
       // eslint-disable-next-line
       return LearnerName + " " + "done";
     } else if (LearnerName) {
       return " " + LearnerName;
     }
-    return (
-      <Input
-        name={masechtoName}
-        type="checkbox"
-        value={masechtoId}
-        onChange={this.handleChange}
-      />
-    );
+    return "not taken";
   }
-
+  dateFormater(oldDate) {
+    let newDate = new Date(oldDate);
+    return newDate.toDateString();
+  }
   renderLoading() {
     return <div>Please wait... Loading</div>;
   }
@@ -149,10 +117,7 @@ export default class Siyum extends Component {
       </div>
     );
   }
-  dateFormater(oldDate) {
-    let newDate = new Date(oldDate);
-    return newDate.toDateString();
-  }
+
   renderMySiyumInfo() {
     const SiyumInfo = this.state.SiyumInfo.map(SiyumInfo => {
       return (
@@ -168,8 +133,6 @@ export default class Siyum extends Component {
             {SiyumInfo.masechto_name + " :  "}
             {this.learnerNameOrCheckboxOrDone(
               SiyumInfo.LearnerName,
-              SiyumInfo.masechto_name,
-              SiyumInfo.id,
               SiyumInfo.completed
             )}
           </Label>
@@ -203,8 +166,7 @@ export default class Siyum extends Component {
             }}
           >
             {SiyumInfo}
-
-            <button>add masechtos</button>
+            <button>send reminder emails</button>
           </Form>
         </Container>
       </div>
@@ -215,22 +177,11 @@ export default class Siyum extends Component {
     if (!localStorage.getItem("isSignedIn")) {
       return <AboutASiyum />;
     }
-
+    if (!this.props.location.state) {
+      return <AboutMySiyumem />;
+    }
     if (this.state.loading) {
       return this.renderLoading();
-    } else if (
-      this.state.siyum.siyumByID.password != null &&
-      // eslint-disable-next-line eqeqeq
-      localStorage.getItem(this.props.match.params.id) !=
-        this.state.siyum.siyumByID.password &&
-      this.state.SiyumInfo.length > 1
-    ) {
-      return (
-        <div>
-          {this.state.err && <p>{this.state.err}</p>}
-          <SiyumPassword password={this.siyumPassword} />;
-        </div>
-      );
     } else if (this.state.SiyumInfo.length > 1) {
       return this.renderMySiyumInfo();
     } else {

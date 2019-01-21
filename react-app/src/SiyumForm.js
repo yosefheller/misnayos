@@ -33,18 +33,17 @@ class SiyumForm extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        // console.log(json);
         if (json.errors) {
           this.setState({ error: json.errors });
         } else {
-          window.alert(
-            "Your Siyum Id is " +
-              json.id +
-              " " +
-              "and your url is http://localhost:3000/siyum/" +
-              json.id
-          );
-          this.props.history.push("/");
+          //   window.alert(
+          //     "Your Siyum Id is " +
+          //       json.id +
+          //       " " +
+          //       "and your url is http://localhost:3000/siyum/" +
+          //       json.id
+          //   );
+          this.props.history.push("/siyum/" + json.id);
         }
       });
   }

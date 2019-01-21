@@ -9,6 +9,7 @@ import SignIn from "./SignIn";
 import SiyumForm from "./SiyumForm";
 import MySiyumem from "./MySiyumem";
 import MyMasechtos from "./MyMasechtos";
+import AdminSiyum from "./AdminSiyum";
 import Siyum from "./Siyum";
 import NoMatch from "./NoMatch";
 import SiyumById from "./SiyumById";
@@ -172,6 +173,21 @@ class Home extends Component {
               />
             )}
           />
+          {/* <Route
+            path="/mysiyum/:id"
+            render={props => (
+              <AdminSiyum
+                {...props}
+                isSignedIn={this.state.isSignedIn}
+                signIn={this.signIn}
+                userinfo={this.state.user.id}
+                prevHistory={this.prevHistory}
+                mySiyum="Home"
+              />
+            )}
+          /> */}
+          <Route path="/mysiyum/:id" component={AdminSiyum} />
+
           <Route
             exact
             path="/"

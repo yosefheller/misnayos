@@ -50,7 +50,9 @@ export default class MyMasechtos extends Component {
       );
   }
   componentDidMount() {
-    this.fetchMyMasechtos();
+    if (this.props.isSignedIn) {
+      this.fetchMyMasechtos();
+    }
   }
   handleChange(event) {
     if (event.target.checked) {

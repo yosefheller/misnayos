@@ -27,7 +27,9 @@ export default class MySiyumem extends Component {
   }
 
   componentDidMount() {
-    this.fetchMySiyumem();
+    if (this.props.isSignedIn) {
+      this.fetchMySiyumem();
+    }
   }
 
   renderLoading() {
@@ -56,7 +58,7 @@ export default class MySiyumem extends Component {
           {mySiyum.siyum_name} , the url is
           <Link
             to={{
-              pathname: "/siyum/" + mySiyum.id,
+              pathname: "/mysiyum/" + mySiyum.id,
               state: {
                 isSignedIn: this.props.isSignedIn,
                 userinfo: this.props.userinfo.id,
@@ -64,7 +66,7 @@ export default class MySiyumem extends Component {
               }
             }}
           >
-            {"  "} http://localhost:3000/siyum/{mySiyum.id}
+            {"  "} http://localhost:3000/mysiyum/{mySiyum.id}
           </Link>
           {"  "}
         </ListGroupItem>
