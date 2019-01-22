@@ -117,7 +117,19 @@ export default class AdminSiyum extends Component {
       </div>
     );
   }
-
+  saderNameElement(saderName) {
+    return (
+      <b
+        style={{
+          border: "1px black solid",
+          width: "31%",
+          height: "4%"
+        }}
+      >
+        {saderName}
+      </b>
+    );
+  }
   renderMySiyumInfo() {
     const SiyumInfo = this.state.SiyumInfo.map(SiyumInfo => {
       return (
@@ -139,6 +151,12 @@ export default class AdminSiyum extends Component {
         </FormGroup>
       );
     });
+    const zeraim = SiyumInfo.slice(0, 11);
+    const moed = SiyumInfo.slice(11, 23);
+    const nashim = SiyumInfo.slice(23, 30);
+    const nezikin = SiyumInfo.slice(30, 40);
+    const kodashim = SiyumInfo.slice(40, 51);
+    const tohoros = SiyumInfo.slice(51, 63);
 
     return (
       <div>
@@ -165,7 +183,18 @@ export default class AdminSiyum extends Component {
               alignItems: "center"
             }}
           >
-            {SiyumInfo}
+            {this.saderNameElement("Zeraim")}
+            {zeraim}
+            {this.saderNameElement("Moed")}
+            {moed}
+            {this.saderNameElement("Nashim")}
+            {nashim}
+            {this.saderNameElement("Nezikin")}
+            {nezikin}
+            {this.saderNameElement("Kodashim")}
+            {kodashim}
+            {this.saderNameElement("Tohoros")}
+            {tohoros}
             <button>send reminder emails</button>
           </Form>
         </Container>

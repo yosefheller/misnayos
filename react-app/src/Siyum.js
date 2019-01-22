@@ -153,6 +153,19 @@ export default class Siyum extends Component {
     let newDate = new Date(oldDate);
     return newDate.toDateString();
   }
+  saderNameElement(saderName) {
+    return (
+      <b
+        style={{
+          border: "1px black solid",
+          width: "31%",
+          height: "4%"
+        }}
+      >
+        {saderName}
+      </b>
+    );
+  }
   renderMySiyumInfo() {
     const SiyumInfo = this.state.SiyumInfo.map(SiyumInfo => {
       return (
@@ -177,37 +190,52 @@ export default class Siyum extends Component {
       );
     });
 
+    const zeraim = SiyumInfo.slice(0, 11);
+    const moed = SiyumInfo.slice(11, 23);
+    const nashim = SiyumInfo.slice(23, 30);
+    const nezikin = SiyumInfo.slice(30, 40);
+    const kodashim = SiyumInfo.slice(40, 51);
+    const tohoros = SiyumInfo.slice(51, 63);
+
     return (
-      <div>
-        <Container
+      <Container
+        style={{
+          width: "80%",
+          height: "80%",
+          margin: "auto"
+        }}
+      >
+        <p>
+          Learning is in memory of {this.state.siyum.siyumByID.neshama} and to
+          be done by {this.dateFormater(this.state.siyum.siyumByID.siyum_date)}{" "}
+          and the Siyum Id is {this.state.siyum.siyumByID.id}
+        </p>
+        <Form
+          inline
+          onSubmit={this.handleSubmit}
           style={{
-            width: "80%",
-            margin: "auto"
+            display: "flex",
+            flexDirection: "column",
+            maxHeight: "618px",
+            flexWrap: "wrap",
+            alignItems: "center"
           }}
         >
-          <p>
-            Learning is in memory of {this.state.siyum.siyumByID.neshama} and to
-            be done by{" "}
-            {this.dateFormater(this.state.siyum.siyumByID.siyum_date)} and the
-            Siyum Id is {this.state.siyum.siyumByID.id}
-          </p>
-          <Form
-            inline
-            onSubmit={this.handleSubmit}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              maxHeight: "600px",
-              flexWrap: "wrap",
-              alignItems: "center"
-            }}
-          >
-            {SiyumInfo}
-
-            <button>add masechtos</button>
-          </Form>
-        </Container>
-      </div>
+          {this.saderNameElement("Zeraim")}
+          {zeraim}
+          {this.saderNameElement("Moed")}
+          {moed}
+          {this.saderNameElement("Nashim")}
+          {nashim}
+          {this.saderNameElement("Nezikin")}
+          {nezikin}
+          {this.saderNameElement("Kodashim")}
+          {kodashim}
+          {this.saderNameElement("Tohoros")}
+          {tohoros}
+          <button>add masechtos</button>
+        </Form>
+      </Container>
     );
   }
 

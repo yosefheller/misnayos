@@ -101,10 +101,9 @@ class Home extends Component {
               isSignedIn={this.state.isSignedIn}
               userinfo={this.state.user}
             />
-          )}
+          )}{" "}
+          {this.state.isSignedIn && <p>Hi {this.state.user.user_name}</p>}
         </Navbar>
-        {this.state.isSignedIn && <p>Hi {this.state.user.user_name}</p>}
-        <hr />
 
         <Switch>
           <Route
