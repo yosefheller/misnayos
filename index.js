@@ -41,16 +41,16 @@ app.use(function(req, res, next) {
   res.locals.messages = require("express-messages")(req, res);
   next();
 });
-require("./config/passport")(passport);
+require("./myapp/config/passport")(passport);
 // Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-const siyumem = require("./routes/siyumem");
-const siyum = require("./routes/siyum");
-const masechtos_mishnayos = require("./routes/masechtos_mishnayos");
-const masechtos_learned = require("./routes/masechtos_learned");
-const users = require("./routes/users");
+const siyumem = require("./myapp/routes/siyumem");
+const siyum = require("./myapp/routes/siyum");
+const masechtos_mishnayos = require("./myapp/routes/masechtos_mishnayos");
+const masechtos_learned = require("./myapp/routes/masechtos_learned");
+const users = require("./myapp/routes/users");
 app.use("/siyumem", siyumem);
 app.use("/siyum", siyum);
 app.use("/masechtos_mishnayos", masechtos_mishnayos);
