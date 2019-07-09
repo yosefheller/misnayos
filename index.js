@@ -1,10 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 var cors = require("cors");
 const expressValidator = require("express-validator");
 const session = require("express-session");
 const passport = require("passport");
-
+const PORT = process.env.PORT || 3030;
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -57,4 +58,4 @@ app.use("/masechtos_mishnayos", masechtos_mishnayos);
 app.use("/masechtos_learned", masechtos_learned);
 app.use("/users", users);
 
-app.listen(3030, () => console.log("Example app listening on port 3030!"));
+app.listen(PORT, () => console.log("Example app listening on port "));
