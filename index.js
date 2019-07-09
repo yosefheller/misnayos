@@ -58,4 +58,4 @@ app.use("/masechtos_mishnayos", masechtos_mishnayos);
 app.use("/masechtos_learned", masechtos_learned);
 app.use("/users", users);
 
-app.listen(PORT, () => console.log("Example app listening on port "));
+app.listen(PORT, () => console.log("Example app listening on port " + port));
