@@ -6,7 +6,7 @@ export default class MySiyumem extends Component {
   state = { loading: true };
 
   fetchMySiyumem() {
-    fetch("http://localhost:3030/siyumem/" + this.props.userinfo.id)
+    fetch("/siyumem/" + this.props.userinfo.id)
       .then(response => response.json())
       .then(mySiyumem => {
         return this.setState(

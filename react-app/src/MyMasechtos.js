@@ -12,7 +12,7 @@ export default class MyMasechtos extends Component {
   }
 
   fetchMyMasechtos() {
-    fetch("http://localhost:3030/masechtos_learned/" + this.props.userinfo.id)
+    fetch("masechtos_learned/" + this.props.userinfo.id)
       .then(response => response.json())
       .then(MyMasechtos => {
         return this.setState({ MyMasechtos, loading: false });
@@ -57,7 +57,7 @@ export default class MyMasechtos extends Component {
   handleChange(event) {
     if (event.target.checked) {
       // console.log(event.target.value);
-      fetch("http://localhost:3030/masechtos_learned/" + event.target.value, {
+      fetch("/masechtos_learned/" + event.target.value, {
         method: "PUT"
       }).then(() => {
         this.fetchMyMasechtos();
@@ -68,7 +68,7 @@ export default class MyMasechtos extends Component {
   handleChange2(event) {
     if (event.target.checked) {
       // console.log(event.target.value);
-      fetch("http://localhost:3030/masechtos_learned/" + event.target.value, {
+      fetch("/masechtos_learned/" + event.target.value, {
         method: "DELETE"
       }).then(() => {
         this.fetchMyMasechtos();

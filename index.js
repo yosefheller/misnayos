@@ -1,4 +1,5 @@
 require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 var cors = require("cors");
@@ -6,10 +7,13 @@ const expressValidator = require("express-validator");
 const session = require("express-session");
 const passport = require("passport");
 const PORT = process.env.PORT || 3030;
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 // Express Session Middleware
+app.use(express.static(path.join(__dirname, "react-app/build")));
+
 app.use(
   session({
     secret: "keyboard cat",
@@ -57,5 +61,7 @@ app.use("/siyum", siyum);
 app.use("/masechtos_mishnayos", masechtos_mishnayos);
 app.use("/masechtos_learned", masechtos_learned);
 app.use("/users", users);
-
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/react/build/index.html"));
+});
 app.listen(PORT, () => console.log("Example app listening on port " + PORT));

@@ -65,7 +65,7 @@ export default class Siyum extends Component {
         siyum_id: this.props.match.params.id
       };
     });
-    fetch("http://localhost:3030/masechtos_learned/newmasechto", {
+    fetch("/masechtos_learned/newmasechto", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -85,14 +85,12 @@ export default class Siyum extends Component {
     }
   }
   fetchSiyumInfo() {
-    fetch(
-      "http://localhost:3030/masechtos_mishnayos/" + this.props.match.params.id
-    )
+    fetch("/masechtos_mishnayos/" + this.props.match.params.id)
       .then(response => response.json())
       .then(SiyumInfo => {
         // console.log(SiyumInfo);
         this.setState(() => ({ SiyumInfo: SiyumInfo }));
-        fetch("http://localhost:3030/siyum/" + this.props.match.params.id)
+        fetch("/siyum/" + this.props.match.params.id)
           .then(response => response.json())
           .then(Siyum => {
             if (Siyum.error) {

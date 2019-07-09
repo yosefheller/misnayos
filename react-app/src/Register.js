@@ -16,7 +16,7 @@ export default class Register extends Component {
     event.preventDefault();
     const body = this.state;
     // console.log(body);
-    fetch("http://localhost:3030/users/newuser", {
+    fetch("/users/newuser", {
       method: "POST",
       headers: {
         Accept: "application/json",

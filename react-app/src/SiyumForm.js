@@ -23,7 +23,7 @@ class SiyumForm extends Component {
 
     const body = this.state;
     // console.log(body);
-    fetch("http://localhost:3030/siyum/newsiyum", {
+    fetch("/siyum/newsiyum", {
       method: "POST",
       headers: {
         Accept: "application/json",

@@ -18,7 +18,7 @@ class SignIn extends Component {
     event.preventDefault();
     const body = this.state;
 
-    fetch("http://localhost:3030/users/login", {
+    fetch("/users/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
